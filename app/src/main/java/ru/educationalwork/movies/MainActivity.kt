@@ -1,10 +1,14 @@
 package ru.educationalwork.movies
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -12,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     companion object {
         val TAG = MainActivity::class.java.simpleName
@@ -30,9 +34,17 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loadLocate()
+        onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_main)
 
         initViews()
+    }
+
+    // переопределим кнопку "Назад"
+    override fun onBackPressed() {
+        val dialog: Dialog = CustomDialog(this)
+        dialog.show()
     }
 
     // инициализация View элементов
@@ -115,6 +127,23 @@ class MainActivity : AppCompatActivity() {
             thirdFilmTitle.currentTextColor
         )
         outState.putIntegerArrayList(COLORS_KEY, colors)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                val intent = Intent(this@MainActivity, SettingsActivity::class.java)
+                startActivity(intent)
+                this.finish()
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 }

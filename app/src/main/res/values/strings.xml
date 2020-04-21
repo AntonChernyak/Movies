@@ -26,6 +26,19 @@
     <string name="do_you_like_it">Нравится?</string>
     <string name="yes">Да</string>
     <string name="your_comment">Оставьте комментарий…</string>
+    <string name="action_settings">Настройки</string>
+    <string name="country_flag">country_flag</string>
+    <string name="some_text">Некий текст</string>
+    <string name="lang_russian">Русский</string>
+    <string name="lang_english">Английский</string>
+    <string name="theme">Тема</string>
+    <string name="language">Язык</string>
+    <string name="light">С</string>
+    <string name="night">Т</string>
+    <string name="invite_friend_button">Invite Friend Button</string>
+    <string name="exit_dialog_question">Вы уверены, что хотите выйти?</string>
+    <string name="ok_custom_dialog_button">Да</string>
+    <string name="cancel_custom_dialog_button">Нет</string>
 
 
 </resources>
