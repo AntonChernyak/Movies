@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Movies</string>
+    <string name="details">More</string>
+    <string name="poster_image">poster_image</string>
+    <string name="filmDescriptionText">Film Description</string>
+    <string name="invate_friend">Invite friend</string>
+    <string name="look">Take a look at this!</string>
+    <string name="chooser"> Choose way to send an invitation</string>
+
+    <string name="lotr">The Lord Of the Rings\Year: 2001\nDirector: Peter Jackson\n\n
+        \t\tA meek Hobbit from the Shire and eight companions set out on a journey to destroy the
+        powerful One Ring and save Middle-earth from the Dark Lord Sauron.
+    </string>
+
+    <string name="pcs">Pirates of the Caribbean\Year: 2003\nDirector: Gore Verbinski\n\n
+        \t\tBlacksmith Will Turner teams up with eccentric pirate "Captain" Jack Sparrow to save his love, the governors
+        daughter, from Jacks former pirate allies, who are now undead.
+    </string>
+
+    <string name="eurotrip">Eurotrip\Year: 2004\nDirectors: Jeff Schaffer, Alec Berg \n\n
+        \t\t Dumped by his girlfriend, a high school grad decides to embark on an overseas adventure in Europe with his friends.
+    </string>
+    <string name="do_you_like_it">Like?</string>
+    <string name="yes">Yes</string>
+    <string name="your_comment">Leave a comment.…</string>
+    <string name="action_settings">Settings</string>
+    <string name="country_flag">country_flag</string>
+    <string name="some_text">Some text</string>
+    <string name="lang_russian">Russian</string>
+    <string name="lang_english">English</string>
+    <string name="theme">Theme</string>
+    <string name="language">Language</string>
+    <string name="light">L</string>
+    <string name="night">D</string>
+    <string name="invite_friend_button">Invite Friend Button</string>
+    <string name="exit_dialog_question">Are you sure you want to quit?</string>
+    <string name="ok_custom_dialog_button">Yes</string>
+    <string name="cancel_custom_dialog_button">No</string>
+</resources>

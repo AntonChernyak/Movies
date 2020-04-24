@@ -1,6 +1,7 @@
 package ru.educationalwork.movies
 
 import android.app.Activity
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
@@ -8,11 +9,14 @@ import ru.educationalwork.movies.MainActivity.Companion.CHECKBOX_STATUS
 import ru.educationalwork.movies.MainActivity.Companion.COMMENT_TEXT
 import ru.educationalwork.movies.MainActivity.Companion.IMAGE_INTENT_KEY
 import ru.educationalwork.movies.MainActivity.Companion.TEXT_INTENT_KEY
+import java.util.*
 
-class FilmDescriptionActivity : AppCompatActivity() {
+class FilmDescriptionActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        onActivityCreateSetTheme(this)
+        loadLocate()
         setContentView(R.layout.activity_film_description)
 
         setPoster()
@@ -47,4 +51,5 @@ class FilmDescriptionActivity : AppCompatActivity() {
         val textDescription: TextView = findViewById(R.id.filmDescriptionTextView)
         textDescription.text = textResources
     }
+
 }
