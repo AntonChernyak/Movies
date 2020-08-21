@@ -1,10 +1,11 @@
-package ru.educationalwork.movies
+package ru.educationalwork.movies.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
+import ru.educationalwork.movies.R
 import java.util.*
 
 @SuppressLint("Registered")
@@ -38,8 +39,12 @@ open class BaseActivity : AppCompatActivity() {
             )
         // устанавливаем тему
         when (theme) {
-            SettingsActivity.DARK_THEME -> activity.setTheme(R.style.DarkAppTheme)
-            SettingsActivity.LIGHT_THEME -> activity.setTheme(R.style.AppTheme)
+            SettingsActivity.DARK_THEME -> activity.setTheme(
+                R.style.DarkAppTheme
+            )
+            SettingsActivity.LIGHT_THEME -> activity.setTheme(
+                R.style.AppTheme
+            )
         }
     }
 

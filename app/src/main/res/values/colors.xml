@@ -6,4 +6,6 @@
 
     <color name="colorTextTitle">#000000</color>
     <color name="colorTextBody">#646464</color>
+
+    <color name="ic_movies_launcher_background">#DCD897</color>
 </resources>

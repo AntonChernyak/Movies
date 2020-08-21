@@ -4,23 +4,27 @@
     <string name="details">More</string>
     <string name="poster_image">poster_image</string>
     <string name="filmDescriptionText">Film Description</string>
-    <string name="invate_friend">Invite friend</string>
+    <string name="invite_friend">Invite friend</string>
     <string name="look">Take a look at this!</string>
     <string name="chooser"> Choose way to send an invitation</string>
 
-    <string name="lotr">The Lord Of the Rings\Year: 2001\nDirector: Peter Jackson\n\n
+    <string name="lotr_title">The Lord Of the Rings\nYear: 2001, Director: Peter Jackson</string>
+    <string name="lotr_description">
         \t\tA meek Hobbit from the Shire and eight companions set out on a journey to destroy the
         powerful One Ring and save Middle-earth from the Dark Lord Sauron.
     </string>
 
-    <string name="pcs">Pirates of the Caribbean\Year: 2003\nDirector: Gore Verbinski\n\n
+    <string name="pcs_title">Pirates of the Caribbean\nYear: 2003, Director: Gore Verbinski</string>
+    <string name="pcs_description">
         \t\tBlacksmith Will Turner teams up with eccentric pirate "Captain" Jack Sparrow to save his love, the governors
         daughter, from Jacks former pirate allies, who are now undead.
     </string>
 
-    <string name="eurotrip">Eurotrip\Year: 2004\nDirectors: Jeff Schaffer, Alec Berg \n\n
+    <string name="eurotrip_title">Eurotrip\nYear: 2004, Directors: Jeff Schaffer, Alec Berg</string>
+    <string name="eurotrip_description">
         \t\t Dumped by his girlfriend, a high school grad decides to embark on an overseas adventure in Europe with his friends.
     </string>
+
     <string name="do_you_like_it">Like?</string>
     <string name="yes">Yes</string>
     <string name="your_comment">Leave a comment.…</string>

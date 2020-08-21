@@ -1,4 +1,4 @@
-package ru.educationalwork.movies
+package ru.educationalwork.movies.activities
 
 import android.content.Context
 import android.content.Intent
@@ -8,6 +8,8 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Spinner
 import android.widget.Switch
+import ru.educationalwork.movies.CustomLanguageAdapter
+import ru.educationalwork.movies.R
 
 class SettingsActivity : BaseActivity() {
 
@@ -42,7 +44,11 @@ class SettingsActivity : BaseActivity() {
         )
 
         // установим адаптер
-        val languageAdapter = CustomLanguageAdapter(applicationContext, images, spinnerData)
+        val languageAdapter = CustomLanguageAdapter(
+            applicationContext,
+            images,
+            spinnerData
+        )
         languageSpinner.adapter = languageAdapter
 
         // обработаем нажатие на элемент - выбор локализации
@@ -94,13 +100,19 @@ class SettingsActivity : BaseActivity() {
     private fun onSwitchClicked() {
         themeSwitch = findViewById(R.id.switch_theme)
         // отследить положение
-        themeSwitch.setOnCheckedChangeListener { compoundButton, onSwitch ->
+        themeSwitch.setOnCheckedChangeListener { _, onSwitch ->
             val mySpinnersEditor: Editor =
                 getSharedPreferences(MY_SHARED_PREF_NAME, Context.MODE_PRIVATE).edit()
             if (onSwitch) {
-                mySpinnersEditor.putInt(SAVE_THEME, DARK_THEME)
+                mySpinnersEditor.putInt(
+                    SAVE_THEME,
+                    DARK_THEME
+                )
             } else {
-                mySpinnersEditor.putInt(SAVE_THEME, LIGHT_THEME)
+                mySpinnersEditor.putInt(
+                    SAVE_THEME,
+                    LIGHT_THEME
+                )
             }
             mySpinnersEditor.putBoolean(SWITCH_THEME_POSITION, onSwitch)
             mySpinnersEditor.apply()

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="15dp"
-    tools:context=".FilmDescriptionActivity">
+    tools:context=".activities.FilmDescriptionActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline5"
@@ -15,7 +15,7 @@
         app:layout_constraintGuide_percent="0.35" />
 
     <ImageView
-        android:id="@+id/filmDescriptionImageView"
+        android:id="@+id/movieDescriptionImageView"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:contentDescription="@string/poster_image"
@@ -26,17 +26,17 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/filmDescriptionTextView"
-        style="@style/TextBodyStyle"
+        android:id="@+id/movieTitleTextView"
+        style="@style/TextTitleStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
-        android:maxLines="12"
-        android:text="@string/filmDescriptionText"
+        android:maxLines="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filmDescriptionImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/movieDescriptionImageView"
+        tools:text="Название фильма" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"
@@ -78,5 +78,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/likeCheckBox" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@id/guideline6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.551"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/movieTitleTextView"
+        app:layout_constraintVertical_bias="1.0">
+
+        <TextView
+            android:id="@+id/movieDescriptionTextView"
+            style="@style/TextBodyStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/guideline6"
+            app:layout_constraintEnd_toEndOf="@+id/movieTitleTextView"
+            app:layout_constraintStart_toStartOf="@+id/movieTitleTextView"
+            app:layout_constraintTop_toBottomOf="@+id/movieTitleTextView"
+            tools:text="Описание фильма" />
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
