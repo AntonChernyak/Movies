@@ -15,7 +15,7 @@ class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val favoriteBtn : ImageView = itemView.findViewById(R.id.itemLikeImageView)
 
     fun bind(item: MovieItem) {
-        title.text = item.title
+        title.text = itemView.resources.getString(item.title)
         poster.setImageResource(item.poster)
 
         if (item.isClick) title.setTextColor(Color.MAGENTA)

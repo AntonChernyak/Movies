@@ -6,35 +6,14 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.SharedPreferences
-import android.content.res.Configuration
-import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_main.*
 import ru.educationalwork.movies.R
 import ru.educationalwork.movies.SettingsFragment
 import java.util.*
 
 @SuppressLint("Registered")
 open class BaseActivity : AppCompatActivity() {
-
-    // установим языковые настройки
-/*    fun loadLocate() {
-        // получаем значение из памяти
-        val sharedPreferences =
-            getSharedPreferences(SettingsFragment.MY_SHARED_PREF_NAME, Activity.MODE_PRIVATE)
-        val language = sharedPreferences.getString(SettingsFragment.LANG_KEY, "ru")
-        if (language != null) {
-            // устанавливаем локализацию
-            val localeLang = Locale(language)
-            val config = Configuration()
-            Locale.setDefault(localeLang)
-            config.setLocale(localeLang)
-            config.setLayoutDirection(localeLang)
-            baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
-        }
-    }*/
 
     // установим тему
     fun onActivityCreateSetTheme(mContext: Context) {
@@ -56,6 +35,7 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
+    // Далее блок для установки локализации
     @Suppress("DEPRECATION")
     fun ContextWrapper.wrap(language: String): ContextWrapper {
         val config = baseContext.resources.configuration

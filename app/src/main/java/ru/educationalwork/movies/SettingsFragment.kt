@@ -2,9 +2,7 @@ package ru.educationalwork.movies
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +10,6 @@ import android.widget.AdapterView
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_settings.view.*
-import ru.educationalwork.movies.activities.MainActivity
 
 
 class SettingsFragment : Fragment() {
@@ -92,37 +89,6 @@ class SettingsFragment : Fragment() {
 
                 // если позиция поменялась, то персоздадим активити
                 if (position != oldSpinnerPosition) {
-                    val moviesListFragment = requireActivity().supportFragmentManager.findFragmentByTag(MainActivity.MOVIES_LIST_FRAGMENT_TAG)
-                    val favoriteListFragment = requireActivity().supportFragmentManager.findFragmentByTag(MainActivity.FAVORITE_LIST_FRAGMENT_TAG)
-                    val settingsListFragment = requireActivity().supportFragmentManager.findFragmentByTag(MainActivity.SETTINGS_FRAGMENT_TAG)
-
-                    Log.d("BLA", "$moviesListFragment")
-                    Log.d("BLA", "$favoriteListFragment")
-                    Log.d("BLA", "$settingsListFragment")
-                    Log.d("BLA", "${this@SettingsFragment}")
-
-/*                    if (moviesListFragment != null && favoriteListFragment != null && settingsListFragment != null) {
-                        requireActivity().supportFragmentManager
-                            .beginTransaction()
-                            .detach(favoriteListFragment)
-                            .attach(favoriteListFragment)
-                            .detach(settingsListFragment)
-                            .attach(settingsListFragment)
-                            .detach(moviesListFragment)
-                            .attach(moviesListFragment)
-                            .commit()
-                    }*/
-
-/*                    val ft = requireActivity().supportFragmentManager.beginTransaction()
-                    if (Build.VERSION.SDK_INT >= 26) {
-                        ft.setReorderingAllowed(false)
-                    }
-                    if (settingsListFragment != null) {
-                        ft.detach(this@SettingsFragment).attach(this@SettingsFragment).commit()
-                    }*/
-
-                    MoviesListFragment.flag = true
-
                     requireActivity().recreate()
                 }
             }

@@ -3,7 +3,6 @@ package ru.educationalwork.movies
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.fragment_movies_list.view.*
 import ru.educationalwork.movies.activities.MainActivity
 import ru.educationalwork.movies.activities.MainActivity.Companion.OUR_REQUEST_CODE
 import ru.educationalwork.movies.activities.MainActivity.Companion.RESULT_TAG
@@ -42,23 +40,22 @@ class MoviesListFragment : Fragment() {
         if (items.isEmpty()) {
             items = arrayListOf(
                 MovieItem(
-                    resources.getString(R.string.lotr_title),
-                    resources.getString(R.string.lotr_description),
+                    R.string.lotr_title,
+                    R.string.lotr_description,
                     R.drawable.lotr
                 ),
                 MovieItem(
-                    resources.getString(R.string.pcs_title),
-                    resources.getString(R.string.pcs_description),
+                    R.string.pcs_title,
+                    R.string.pcs_description,
                     R.drawable.pcs
                 ),
                 MovieItem(
-                    resources.getString(R.string.eurotrip_title),
-                    resources.getString(R.string.eurotrip_description),
+                    R.string.eurotrip_title,
+                    R.string.eurotrip_description,
                     R.drawable.euro_trip
                 )
             )
         }
-        Log.d("BLA", "onViewCreated: ${items[0]}")
         initRecycler(view)
     }
 
@@ -109,22 +106,22 @@ class MoviesListFragment : Fragment() {
                     repeat(3) {
                         items.add(
                             MovieItem(
-                                resources.getString(R.string.lotr_title),
-                                resources.getString(R.string.lotr_description),
+                                R.string.lotr_title,
+                                R.string.lotr_description,
                                 R.drawable.lotr
                             )
                         )
                         items.add(
                             MovieItem(
-                                resources.getString(R.string.pcs_title),
-                                resources.getString(R.string.pcs_description),
+                                R.string.pcs_title,
+                                R.string.pcs_description,
                                 R.drawable.pcs
                             )
                         )
                         items.add(
                             MovieItem(
-                                resources.getString(R.string.eurotrip_title),
-                                resources.getString(R.string.eurotrip_description),
+                                R.string.eurotrip_title,
+                                R.string.eurotrip_description,
                                 R.drawable.euro_trip
                             )
                         )

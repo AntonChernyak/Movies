@@ -19,11 +19,11 @@ class DetailsFragment : Fragment(){
         private const val EXTRA_DESCRIPTION = "extra_description"
         private const val EXTRA_POSTER = "extra_poster"
 
-        fun newInstance(title: String, description: String, poster: Int): DetailsFragment{
+        fun newInstance(title: Int, description: Int, poster: Int): DetailsFragment{
             val moviesListFragment = DetailsFragment()
             val bundle = Bundle()
-            bundle.putString(EXTRA_TITLE, title)
-            bundle.putString(EXTRA_DESCRIPTION, description)
+            bundle.putInt(EXTRA_TITLE, title)
+            bundle.putInt(EXTRA_DESCRIPTION, description)
             bundle.putInt(EXTRA_POSTER, poster)
             moviesListFragment.arguments = bundle
 
@@ -40,8 +40,10 @@ class DetailsFragment : Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        movieTitleTextView.text = arguments?.getString(EXTRA_TITLE, "")
-        movieDescriptionTextView.text = arguments?.getString(EXTRA_DESCRIPTION, "")
+        val title: Int? = arguments?.getInt(EXTRA_TITLE, 0)
+        movieTitleTextView.text = title?.let { view.resources.getString(it) }
+        val description: Int? = arguments?.getInt(EXTRA_DESCRIPTION, 0)
+        movieDescriptionTextView.text = description?.let { view.resources.getString(it) }
         arguments?.getInt(EXTRA_POSTER, 0)?.let { movieDescriptionImageView.setImageResource(it) }
     }
 
@@ -55,7 +57,6 @@ class DetailsFragment : Fragment(){
         val checkBoxStatus = requireActivity().findViewById<CheckBox>(R.id.likeCheckBox).isChecked
         resultIntent.putExtra(MainActivity.CHECKBOX_STATUS, checkBoxStatus)
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, resultIntent)
-        //fragmentManager?.popBackStack()
         super.onPause()
     }
 

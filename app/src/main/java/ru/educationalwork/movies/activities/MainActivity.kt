@@ -1,13 +1,8 @@
 package ru.educationalwork.movies.activities
 
-import android.app.Activity
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
-import android.content.SharedPreferences
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -35,7 +30,6 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //loadLocate()
         onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_main)
 
