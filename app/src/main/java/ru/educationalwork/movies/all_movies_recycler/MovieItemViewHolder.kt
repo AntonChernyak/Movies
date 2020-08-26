@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.educationalwork.movies.R
-import ru.educationalwork.movies.activities.SettingsActivity
+import ru.educationalwork.movies.SettingsFragment
 
 class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val poster: ImageView = itemView.findViewById(R.id.itemPosterView)
@@ -27,13 +27,13 @@ class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
     private fun getTitleColor(context: Context): Int {
         val theme: Int =
-            context.getSharedPreferences(SettingsActivity.MY_SHARED_PREF_NAME, Context.MODE_PRIVATE).getInt(
-                SettingsActivity.SAVE_THEME,
+            context.getSharedPreferences(SettingsFragment.MY_SHARED_PREF_NAME, Context.MODE_PRIVATE).getInt(
+                SettingsFragment.SAVE_THEME,
                 0
             )
         return when (theme) {
-            SettingsActivity.DARK_THEME -> Color.WHITE
-            SettingsActivity.LIGHT_THEME -> Color.BLACK
+            SettingsFragment.DARK_THEME -> Color.WHITE
+            SettingsFragment.LIGHT_THEME -> Color.BLACK
             else -> Color.BLACK
         }
     }

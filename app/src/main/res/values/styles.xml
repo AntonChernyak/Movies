@@ -13,7 +13,6 @@
         <item name="colorAccent">#008175</item>
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:textColorSecondary">#FFFFFF</item>
     </style>
 
     <style name="TextTitleStyle">

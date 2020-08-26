@@ -43,6 +43,9 @@
     <string name="ok_custom_dialog_button">Да</string>
     <string name="cancel_custom_dialog_button">Нет</string>
     <string name="add_favorite_button" translatable="false">Add Favorite Button</string>
+    <string name="bn_item_home">Главная</string>
+    <string name="bn_item_settings">Настройки</string>
+    <string name="bn_item_favorite">Избранное</string>
 
 
 </resources>
