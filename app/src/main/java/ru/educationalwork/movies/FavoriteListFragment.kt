@@ -1,7 +1,10 @@
 package ru.educationalwork.movies
 
+import android.app.Activity
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +13,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_main.*
 import ru.educationalwork.movies.activities.MainActivity
 import ru.educationalwork.movies.all_movies_recycler.CustomItemAnimator
 import ru.educationalwork.movies.all_movies_recycler.MovieItem
@@ -26,6 +30,7 @@ class FavoriteListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initRecycler(view)
+        requireActivity().bottomNavigationView.menu.getItem(MainActivity.FAVORITE_LIST_FRAGMENT_BN_POSITION).isChecked = true
     }
 
     private fun initRecycler(view: View){
@@ -37,13 +42,7 @@ class FavoriteListFragment : Fragment() {
         favoriteRecyclerView.layoutManager = layoutManager
         favoriteRecyclerView.adapter = MoviesAdapter(MainActivity.Storage.favoriteList, object : MoviesAdapter.MovieItemListener{
             override fun onMoreButtonClick(movieItem: MovieItem, position: Int) {
-                movieItem.isClick = true
-                favoriteRecyclerView.adapter?.notifyItemChanged(position)
-                requireActivity().supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.fragmentContainer, DetailsFragment.newInstance(movieItem.title, movieItem.description, movieItem.poster))
-                    .addToBackStack(null)
-                    .commit()
+                (requireActivity() as? MoviesListFragment.OnDetailButtonClickListener)?.onDetailBtnClick(movieItem, this@FavoriteListFragment)
             }
 
             override fun onFavoriteButtonClick(movieItem: MovieItem, position: Int) {
@@ -66,4 +65,23 @@ class FavoriteListFragment : Fragment() {
         favoriteRecyclerView.itemAnimator = CustomItemAnimator()
 
     }
+
+
+    // Получим результат из фрагмента с описанием фильма
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == MainActivity.OUR_REQUEST_CODE) {
+            var checkBoxStatus: Boolean? = false
+            var commentText: String? = null
+            if (resultCode == Activity.RESULT_OK) {
+                data?.let {
+                    commentText = it.getStringExtra(MainActivity.COMMENT_TEXT)
+                    checkBoxStatus = it.getBooleanExtra(MainActivity.CHECKBOX_STATUS, false)
+                }
+            }
+            Log.i(MainActivity.RESULT_TAG, "Статус чекбокса: $checkBoxStatus, текст комментария: $commentText")
+        }
+    }
+
+
 }

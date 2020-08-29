@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_main.*
 import ru.educationalwork.movies.activities.MainActivity
+import ru.educationalwork.movies.activities.MainActivity.Companion.MOVIES_LIST_FRAGMENT_BN_POSITION
 import ru.educationalwork.movies.activities.MainActivity.Companion.OUR_REQUEST_CODE
 import ru.educationalwork.movies.activities.MainActivity.Companion.RESULT_TAG
 import ru.educationalwork.movies.activities.MainActivity.Storage.favoriteList
@@ -22,11 +24,6 @@ import ru.educationalwork.movies.all_movies_recycler.MovieItem
 import ru.educationalwork.movies.all_movies_recycler.MoviesAdapter
 
 class MoviesListFragment : Fragment() {
-
-    companion object {
-        var flag = true
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +54,9 @@ class MoviesListFragment : Fragment() {
             )
         }
         initRecycler(view)
+        requireActivity().bottomNavigationView.menu.getItem(MOVIES_LIST_FRAGMENT_BN_POSITION).isChecked =
+            true
+
     }
 
     private fun initRecycler(view: View) {
@@ -70,19 +70,7 @@ class MoviesListFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = MoviesAdapter(items, object : MoviesAdapter.MovieItemListener {
             override fun onMoreButtonClick(movieItem: MovieItem, position: Int) {
-                movieItem.isClick = true
-                recyclerView.adapter?.notifyItemChanged(position)
-                val fragment = DetailsFragment.newInstance(
-                    movieItem.title,
-                    movieItem.description,
-                    movieItem.poster
-                )
-                fragment.setTargetFragment(this@MoviesListFragment, OUR_REQUEST_CODE)
-                requireActivity().supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.fragmentContainer, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                (requireActivity() as? OnDetailButtonClickListener)?.onDetailBtnClick(movieItem, this@MoviesListFragment)
             }
 
             override fun onFavoriteButtonClick(movieItem: MovieItem, position: Int) {
@@ -155,6 +143,10 @@ class MoviesListFragment : Fragment() {
             }
             Log.i(RESULT_TAG, "Статус чекбокса: $checkBoxStatus, текст комментария: $commentText")
         }
+    }
+
+    interface OnDetailButtonClickListener {
+        fun onDetailBtnClick(movie: MovieItem, requestFragment: Fragment?)
     }
 
 }

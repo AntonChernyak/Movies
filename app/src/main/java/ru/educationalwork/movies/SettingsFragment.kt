@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_settings.view.*
+import ru.educationalwork.movies.activities.MainActivity
 
 
 class SettingsFragment : Fragment() {
@@ -28,11 +30,7 @@ class SettingsFragment : Fragment() {
 
     private var localeValue: String? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
@@ -40,6 +38,7 @@ class SettingsFragment : Fragment() {
         initSpinner(view)
         onSwitchClicked(view)
         loadPositions(view)
+        requireActivity().bottomNavigationView.menu.getItem(MainActivity.SETTINGS_FRAGMENT_BN_POSITION).isChecked = true
     }
 
     private fun initSpinner(fragmentView: View) {
@@ -47,50 +46,32 @@ class SettingsFragment : Fragment() {
         val languageSpinner: Spinner = fragmentView.findViewById(R.id.langSpinner)
 
         // зададим данные
-        val spinnerData = arrayOf(
-            resources.getString(R.string.lang_russian),
-            resources.getString(R.string.lang_english)
-        )
+        val spinnerData = arrayOf(resources.getString(R.string.lang_russian), resources.getString(R.string.lang_english))
 
-        val images = intArrayOf(
-            R.drawable.flag_rus,
-            R.drawable.flag_en
-        )
+        val images = intArrayOf(R.drawable.flag_rus, R.drawable.flag_en)
 
         // установим адаптер
-        val languageAdapter = CustomLanguageAdapter(
-            requireContext(),
-            images,
-            spinnerData
-        )
+        val languageAdapter = CustomLanguageAdapter(requireContext(), images, spinnerData)
         languageSpinner.adapter = languageAdapter
 
         // обработаем нажатие на элемент - выбор локализации
         languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 when (position) {
                     RUS -> localeValue = "ru"
                     ENG -> localeValue = "en"
                 }
 
                 // получим старую позицию спиннера
-                val oldSpinnerPosition =
-                    requireContext().getSharedPreferences(MY_SHARED_PREF_NAME, Context.MODE_PRIVATE)
-                        .getInt(
-                            LANG_SPINNER_POSITION, 0
-                        )
+                val oldSpinnerPosition = requireContext()
+                    .getSharedPreferences(MY_SHARED_PREF_NAME, Context.MODE_PRIVATE)
+                    .getInt(LANG_SPINNER_POSITION, 0)
+
                 // сохраним выбранную локаль и позицию
                 localeValue?.let { saveLocaleSettings(it, fragmentView) }
 
                 // если позиция поменялась, то персоздадим активити
-                if (position != oldSpinnerPosition) {
-                    requireActivity().recreate()
-                }
+                if (position != oldSpinnerPosition) requireActivity().recreate()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -100,8 +81,10 @@ class SettingsFragment : Fragment() {
 
     // сохраним значение и положение спиннера
     private fun saveLocaleSettings(locale: String, view: View) {
-        val editor =
-            requireContext().getSharedPreferences(MY_SHARED_PREF_NAME, Context.MODE_PRIVATE).edit()
+        val editor = requireContext()
+            .getSharedPreferences(MY_SHARED_PREF_NAME, Context.MODE_PRIVATE)
+            .edit()
+
         editor.putString(LANG_KEY, locale)
         editor.putInt(LANG_SPINNER_POSITION, view.langSpinner.selectedItemPosition)
         editor.apply()
@@ -111,20 +94,13 @@ class SettingsFragment : Fragment() {
     private fun onSwitchClicked(view: View) {
         // отследить положение
         view.switchTheme?.setOnCheckedChangeListener { _, onSwitch ->
-            val mySpinnersEditor: SharedPreferences.Editor =
-                requireActivity().getSharedPreferences(MY_SHARED_PREF_NAME, Context.MODE_PRIVATE)
-                    .edit()
-            if (onSwitch) {
-                mySpinnersEditor.putInt(
-                    SAVE_THEME,
-                    DARK_THEME
-                )
-            } else {
-                mySpinnersEditor.putInt(
-                    SAVE_THEME,
-                    LIGHT_THEME
-                )
-            }
+            val mySpinnersEditor: SharedPreferences.Editor = requireActivity()
+                .getSharedPreferences(MY_SHARED_PREF_NAME, Context.MODE_PRIVATE)
+                .edit()
+
+            if (onSwitch) mySpinnersEditor.putInt(SAVE_THEME, DARK_THEME)
+            else mySpinnersEditor.putInt(SAVE_THEME, LIGHT_THEME)
+
             mySpinnersEditor.putBoolean(SWITCH_THEME_POSITION, onSwitch)
             mySpinnersEditor.apply()
         }
@@ -137,19 +113,16 @@ class SettingsFragment : Fragment() {
 
     // установка начальных позиций спиннера и свитча
     private fun loadPositions(view: View) {
-        val switchPosition: Boolean =
-            requireActivity().getSharedPreferences(MY_SHARED_PREF_NAME, Context.MODE_PRIVATE)
-                .getBoolean(
-                    SWITCH_THEME_POSITION, false
-                )
+        val switchPosition: Boolean = requireActivity()
+            .getSharedPreferences(MY_SHARED_PREF_NAME, Context.MODE_PRIVATE)
+            .getBoolean( SWITCH_THEME_POSITION, false)
 
         view.switchTheme.isChecked = switchPosition
 
-        val langSpinnerPosition =
-            requireActivity().getSharedPreferences(MY_SHARED_PREF_NAME, Context.MODE_PRIVATE)
-                .getInt(
-                    LANG_SPINNER_POSITION, 0
-                )
+        val langSpinnerPosition = requireActivity()
+            .getSharedPreferences(MY_SHARED_PREF_NAME, Context.MODE_PRIVATE)
+            .getInt(LANG_SPINNER_POSITION, 0)
+
         view.langSpinner.setSelection(langSpinnerPosition)
     }
 

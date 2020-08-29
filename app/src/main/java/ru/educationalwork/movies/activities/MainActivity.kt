@@ -5,12 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.educationalwork.movies.*
 import ru.educationalwork.movies.all_movies_recycler.MovieItem
 
-class MainActivity : BaseActivity() {
+
+class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListener {
 
     companion object {
         const val RESULT_TAG = "result_tag"
@@ -20,6 +22,10 @@ class MainActivity : BaseActivity() {
         const val MOVIES_LIST_FRAGMENT_TAG = "home_fragment_tag"
         const val FAVORITE_LIST_FRAGMENT_TAG = "favorite_fragment_tag"
         const val SETTINGS_FRAGMENT_TAG = "settings_fragment_tag"
+        const val DETAILS_FRAGMENT_TAG = "details_fragment_tag"
+        const val MOVIES_LIST_FRAGMENT_BN_POSITION = 0
+        const val FAVORITE_LIST_FRAGMENT_BN_POSITION = 1
+        const val SETTINGS_FRAGMENT_BN_POSITION = 2
     }
 
     object Storage {
@@ -35,22 +41,17 @@ class MainActivity : BaseActivity() {
 
         bottomNavigationViewSettings()
 
-        if (savedInstanceState == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, MoviesListFragment())
-                .commit()
-        }
-
+        if (savedInstanceState == null) bottomNavigationView.selectedItemId = R.id.itemHomeFragment
     }
 
     private fun bottomNavigationViewSettings() {
+
         val navListener: BottomNavigationView.OnNavigationItemSelectedListener =
             BottomNavigationView.OnNavigationItemSelectedListener { item ->
                 when (item.itemId) {
-                    R.id.itemHomeFragment -> moviesListFragmentShow()
-                    R.id.itemFavoriteFragment -> favoriteListFragmentShow()
-                    R.id.itemSettingsFragment -> settingsFragmentShow()
+                    R.id.itemHomeFragment -> setFragment(MOVIES_LIST_FRAGMENT_TAG)
+                    R.id.itemFavoriteFragment -> setFragment(FAVORITE_LIST_FRAGMENT_TAG)
+                    R.id.itemSettingsFragment -> setFragment(SETTINGS_FRAGMENT_TAG)
                 }
                 true
             }
@@ -59,59 +60,18 @@ class MainActivity : BaseActivity() {
         bnView.setOnNavigationItemSelectedListener(navListener)
 
         // установим цвет заднего фона в зависимости от темы
-        val theme: Int =
-            getSharedPreferences(SettingsFragment.MY_SHARED_PREF_NAME, Context.MODE_PRIVATE).getInt(
-                SettingsFragment.SAVE_THEME,
-                0
-            )
+        val theme: Int = getSharedPreferences(SettingsFragment.MY_SHARED_PREF_NAME, Context.MODE_PRIVATE)
+                .getInt(SettingsFragment.SAVE_THEME, 0)
 
         when (theme) {
             SettingsFragment.DARK_THEME -> bottomNavigationView.setBackgroundColor(
-                resources.getColor(
-                    R.color.bottomNavigationDarkBackground,
-                    null
-                )
+                resources.getColor(R.color.bottomNavigationDarkBackground, null)
             )
             SettingsFragment.LIGHT_THEME -> bottomNavigationView.setBackgroundColor(
-                resources.getColor(
-                    R.color.bottomNavigationLightBackground,
-                    null
-                )
+                resources.getColor(R.color.bottomNavigationLightBackground, null)
             )
         }
     }
-
-
-    private fun moviesListFragmentShow() {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragmentContainer, MoviesListFragment(), MOVIES_LIST_FRAGMENT_TAG)
-            .addToBackStack(null)
-            .commit()
-    }
-
-    private fun favoriteListFragmentShow() {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragmentContainer, FavoriteListFragment(), FAVORITE_LIST_FRAGMENT_TAG)
-            .addToBackStack(null)
-            .commit()
-    }
-
-    private fun settingsFragmentShow() {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragmentContainer, SettingsFragment(), SETTINGS_FRAGMENT_TAG)
-            .addToBackStack(null)
-            .commit()
-    }
-
-    // переопределим кнопку "Назад"
-    override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount == 0) CustomDialog(this).show()
-        else super.onBackPressed()
-    }
-
 
     // обработка кнопки отправки сообщения (неявный интент)
     private fun inviteFriendOnClick() {
@@ -144,5 +104,51 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    // переопределим кнопку "Назад"
+    override fun onBackPressed() {
+        val homeFragment = supportFragmentManager.findFragmentByTag(MOVIES_LIST_FRAGMENT_TAG)
+        if (homeFragment != null && !homeFragment.isDetached) {
+            if (supportFragmentManager.backStackEntryCount == 0) CustomDialog(this).show()
+            else supportFragmentManager.popBackStack()
+        } else {
+            if (supportFragmentManager.backStackEntryCount > 0) supportFragmentManager.popBackStack()
+            else bottomNavigationView.selectedItemId = R.id.itemHomeFragment
+        }
+    }
+
+    private fun setFragment(
+        tag: String,
+        title: Int = 0,
+        description: Int = 0,
+        poster: Int = 0,
+        requestFragment: Fragment? = null
+    ) {
+        val transaction = supportFragmentManager.beginTransaction()
+        var fragment: Fragment? = supportFragmentManager.findFragmentByTag(tag)
+
+        if (fragment == null) {
+            fragment = when (tag) {
+                MOVIES_LIST_FRAGMENT_TAG -> MoviesListFragment()
+                FAVORITE_LIST_FRAGMENT_TAG -> FavoriteListFragment()
+                SETTINGS_FRAGMENT_TAG -> SettingsFragment()
+                DETAILS_FRAGMENT_TAG -> DetailsFragment.newInstance(title, description, poster)
+                else -> null
+            }
+            if (tag == DETAILS_FRAGMENT_TAG) fragment?.setTargetFragment(requestFragment, OUR_REQUEST_CODE)
+            fragment?.let { transaction.replace(R.id.fragmentContainer, it, tag) }
+            if (fragment?.tag == DETAILS_FRAGMENT_TAG) transaction.addToBackStack(null)
+
+        } else {
+            transaction.replace(R.id.fragmentContainer, fragment, tag)
+        }
+        transaction.commit()
+    }
+
+
+    override fun onDetailBtnClick(movie: MovieItem, requestFragment: Fragment?) {
+        movie.isClick = true
+        // requestFragment нужен, чтобы получить статус чекбокса и текст комментария из DetailFragment
+        setFragment(DETAILS_FRAGMENT_TAG, movie.title, movie.description, movie.poster, requestFragment)
+    }
 
 }
