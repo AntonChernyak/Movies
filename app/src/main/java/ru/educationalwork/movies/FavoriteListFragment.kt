@@ -8,18 +8,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.educationalwork.movies.activities.MainActivity
 import ru.educationalwork.movies.all_movies_recycler.CustomItemAnimator
 import ru.educationalwork.movies.all_movies_recycler.MovieItem
 import ru.educationalwork.movies.all_movies_recycler.MoviesAdapter
 
-class FavoriteListFragment : Fragment() {
+class FavoriteListFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,6 +30,7 @@ class FavoriteListFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initRecycler(view)
         requireActivity().bottomNavigationView.menu.getItem(MainActivity.FAVORITE_LIST_FRAGMENT_BN_POSITION).isChecked = true
     }
@@ -51,6 +53,16 @@ class FavoriteListFragment : Fragment() {
                     MainActivity.Storage.favoriteList.removeAt(position)
                     favoriteRecyclerView.adapter?.notifyItemRemoved(position)
                     favoriteRecyclerView.adapter?.notifyItemRangeChanged(position, MainActivity.Storage.favoriteList.size - position)
+
+                    Snackbar
+                        .make(view, resources.getString(R.string.removed_from_favorites), Snackbar.LENGTH_SHORT)
+                        .setAction(resources.getString(R.string.undo)) {
+                            movieItem.isFavorite = true
+                            MainActivity.Storage.favoriteList.add(position, movieItem)
+                            favoriteRecyclerView.adapter?.notifyItemChanged(position)
+                            favoriteRecyclerView.adapter?.notifyItemRangeChanged(position, MainActivity.Storage.favoriteList.size - position)
+                        }
+                        .show()
                 }
             }
 
@@ -58,14 +70,13 @@ class FavoriteListFragment : Fragment() {
 
         // Разделитель
         val itemDecoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
-        requireContext().getDrawable(R.drawable.item_decorator_image)?.let { itemDecoration.setDrawable(it) }
+        ContextCompat.getDrawable(requireActivity(), R.drawable.item_decorator_image)?.let { itemDecoration.setDrawable(it) }
         favoriteRecyclerView.addItemDecoration(itemDecoration)
 
         // Аниматор
         favoriteRecyclerView.itemAnimator = CustomItemAnimator()
 
     }
-
 
     // Получим результат из фрагмента с описанием фильма
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

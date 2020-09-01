@@ -2,6 +2,7 @@ package ru.educationalwork.movies
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.details_fragment.*
 import ru.educationalwork.movies.activities.MainActivity
 
-class DetailsFragment : Fragment(){
+class DetailsFragment : BaseFragment(){
 
     companion object{
         private const val EXTRA_TITLE = "extra_title"
@@ -40,11 +41,16 @@ class DetailsFragment : Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val title: Int? = arguments?.getInt(EXTRA_TITLE, 0)
         movieTitleTextView.text = title?.let { view.resources.getString(it) }
+
         val description: Int? = arguments?.getInt(EXTRA_DESCRIPTION, 0)
         movieDescriptionTextView.text = description?.let { view.resources.getString(it) }
+
         arguments?.getInt(EXTRA_POSTER, 0)?.let { movieDescriptionImageView.setImageResource(it) }
+
+        toolbarDescriptionFragment.title = resources.getString(R.string.movie_description)
     }
 
     override fun onPause() {

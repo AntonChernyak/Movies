@@ -1,10 +1,8 @@
 package ru.educationalwork.movies.activities
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.util.Log
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -38,7 +36,6 @@ class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListe
         super.onCreate(savedInstanceState)
         onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_main)
-
         bottomNavigationViewSettings()
 
         if (savedInstanceState == null) bottomNavigationView.selectedItemId = R.id.itemHomeFragment
@@ -65,53 +62,34 @@ class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListe
 
         when (theme) {
             SettingsFragment.DARK_THEME -> bottomNavigationView.setBackgroundColor(
-                resources.getColor(R.color.bottomNavigationDarkBackground, null)
+                resources.getColor(R.color.darkBackground, null)
             )
             SettingsFragment.LIGHT_THEME -> bottomNavigationView.setBackgroundColor(
-                resources.getColor(R.color.bottomNavigationLightBackground, null)
+                resources.getColor(R.color.lightBackground, null)
             )
-        }
-    }
-
-    // обработка кнопки отправки сообщения (неявный интент)
-    private fun inviteFriendOnClick() {
-        val textMessage = resources.getString(R.string.look)
-        val sendIntent = Intent()
-        sendIntent.action = Intent.ACTION_SEND
-        sendIntent.putExtra(Intent.EXTRA_TEXT, textMessage)
-        sendIntent.type = "text/plain"
-        val title = resources.getString(R.string.chooser)
-        // Создаем Intent для отображения диалога выбора.
-        val chooser = Intent.createChooser(sendIntent, title)
-        // Проверяем, что intent может быть успешно обработан
-        sendIntent.resolveActivity(packageManager)?.let {
-            startActivity(chooser)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_invite -> {
-                inviteFriendOnClick()
-                return true
-            }
-            else -> super.onOptionsItemSelected(item)
         }
     }
 
     // переопределим кнопку "Назад"
     override fun onBackPressed() {
         val homeFragment = supportFragmentManager.findFragmentByTag(MOVIES_LIST_FRAGMENT_TAG)
+        val favoriteFragment = supportFragmentManager.findFragmentByTag(FAVORITE_LIST_FRAGMENT_TAG)
+        val settingsFragment = supportFragmentManager.findFragmentByTag(SETTINGS_FRAGMENT_TAG)
+        //for (f in supportFragmentManager.fragments) f.isDetached
+        if (favoriteFragment != null && favoriteFragment.isVisible) favoriteFragment.onDetach()
+        if (settingsFragment != null && settingsFragment.isVisible) settingsFragment.isRemoving
+
+        Log.d("BLA", "${settingsFragment?.isVisible}")
+
         if (homeFragment != null && !homeFragment.isDetached) {
+            Log.d("BLA", "if = ${supportFragmentManager.backStackEntryCount}")
             if (supportFragmentManager.backStackEntryCount == 0) CustomDialog(this).show()
-            else supportFragmentManager.popBackStack()
+          else super.onBackPressed()
+            //  else supportFragmentManager.popBackStack()
         } else {
-            if (supportFragmentManager.backStackEntryCount > 0) supportFragmentManager.popBackStack()
+            Log.d("BLA", "else = ${supportFragmentManager.backStackEntryCount}")
+           // if (supportFragmentManager.backStackEntryCount > 0) supportFragmentManager.popBackStack()
+            if (supportFragmentManager.backStackEntryCount > 0) super.onBackPressed()
             else bottomNavigationView.selectedItemId = R.id.itemHomeFragment
         }
     }

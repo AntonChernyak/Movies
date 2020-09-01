@@ -11,7 +11,12 @@
 
     <color name="ic_movies_launcher_background">#DCD897</color>
 
-    <color name="bottomNavigationDarkBackground">@color/background_material_dark</color>
-    <color name="bottomNavigationLightBackground">@color/colorWhite</color>
+    <color name="darkBackground">@color/background_material_dark</color>
+    <color name="lightBackground">@color/colorWhite</color>
     <color name="bottomNavigationDividerColor">#BDBDBD</color>
+
+    <color name="translucent_scrim_top">#26000000</color>
+    <color name="translucent_scrim_top_center">#0C000000</color>
+    <color name="translucent_scrim_bottom">#2A000000</color>
+    <color name="translucent_scrim_bottom_center">#0D000000</color>
 </resources>

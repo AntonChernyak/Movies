@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_settings.view.*
 import ru.educationalwork.movies.activities.MainActivity
 
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : BaseFragment() {
 
     companion object {
         const val MY_SHARED_PREF_NAME = "settings"
@@ -35,6 +35,7 @@ class SettingsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initSpinner(view)
         onSwitchClicked(view)
         loadPositions(view)

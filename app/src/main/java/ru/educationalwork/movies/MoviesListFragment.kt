@@ -8,12 +8,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_movies_list.*
 import ru.educationalwork.movies.activities.MainActivity
 import ru.educationalwork.movies.activities.MainActivity.Companion.MOVIES_LIST_FRAGMENT_BN_POSITION
 import ru.educationalwork.movies.activities.MainActivity.Companion.OUR_REQUEST_CODE
@@ -23,7 +26,7 @@ import ru.educationalwork.movies.activities.MainActivity.Storage.items
 import ru.educationalwork.movies.all_movies_recycler.MovieItem
 import ru.educationalwork.movies.all_movies_recycler.MoviesAdapter
 
-class MoviesListFragment : Fragment() {
+class MoviesListFragment : BaseFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,6 +37,7 @@ class MoviesListFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         if (items.isEmpty()) {
             items = arrayListOf(
                 MovieItem(
@@ -54,9 +58,7 @@ class MoviesListFragment : Fragment() {
             )
         }
         initRecycler(view)
-        requireActivity().bottomNavigationView.menu.getItem(MOVIES_LIST_FRAGMENT_BN_POSITION).isChecked =
-            true
-
+        requireActivity().bottomNavigationView.menu.getItem(MOVIES_LIST_FRAGMENT_BN_POSITION).isChecked = true
     }
 
     private fun initRecycler(view: View) {
@@ -78,10 +80,27 @@ class MoviesListFragment : Fragment() {
                     movieItem.isFavorite = true
                     favoriteList.add(movieItem)
                     recyclerView.adapter?.notifyItemChanged(position)
+
+                    Snackbar
+                        .make(view, resources.getString(R.string.added_to_favorites), Snackbar.LENGTH_SHORT)
+                        .setAction(resources.getString(R.string.undo)) {
+                            favoriteList.remove(movieItem)
+                            movieItem.isFavorite = false
+                            recyclerView.adapter?.notifyItemChanged(position)}
+                        .show()
                 } else {
                     favoriteList.remove(movieItem)
                     movieItem.isFavorite = false
                     recyclerView.adapter?.notifyItemChanged(position)
+
+                    Snackbar
+                        .make(view, resources.getString(R.string.removed_from_favorites), Snackbar.LENGTH_SHORT)
+                        .setAction(resources.getString(R.string.undo)) {
+                            movieItem.isFavorite = true
+                            favoriteList.add(movieItem)
+                            recyclerView.adapter?.notifyItemChanged(position)
+                        }
+                        .show()
                 }
             }
 
@@ -124,7 +143,7 @@ class MoviesListFragment : Fragment() {
 
         // Разделитель
         val itemDecoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
-        requireContext().getDrawable(R.drawable.item_decorator_image)
+        ContextCompat.getDrawable(requireActivity(), R.drawable.item_decorator_image)
             ?.let { itemDecoration.setDrawable(it) }
         recyclerView.addItemDecoration(itemDecoration)
     }
