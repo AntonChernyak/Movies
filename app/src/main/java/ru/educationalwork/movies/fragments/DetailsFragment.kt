@@ -1,16 +1,15 @@
-package ru.educationalwork.movies
+package ru.educationalwork.movies.fragments
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
-import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.details_fragment.*
+import ru.educationalwork.movies.R
 import ru.educationalwork.movies.activities.MainActivity
 
 class DetailsFragment : BaseFragment(){
@@ -20,8 +19,9 @@ class DetailsFragment : BaseFragment(){
         private const val EXTRA_DESCRIPTION = "extra_description"
         private const val EXTRA_POSTER = "extra_poster"
 
-        fun newInstance(title: Int, description: Int, poster: Int): DetailsFragment{
-            val moviesListFragment = DetailsFragment()
+        fun newInstance(title: Int, description: Int, poster: Int): DetailsFragment {
+            val moviesListFragment =
+                DetailsFragment()
             val bundle = Bundle()
             bundle.putInt(EXTRA_TITLE, title)
             bundle.putInt(EXTRA_DESCRIPTION, description)

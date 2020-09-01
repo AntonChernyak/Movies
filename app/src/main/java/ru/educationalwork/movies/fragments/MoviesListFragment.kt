@@ -1,4 +1,4 @@
-package ru.educationalwork.movies
+package ru.educationalwork.movies.fragments
 
 import android.app.Activity
 import android.content.Intent
@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_movies_list.*
+import ru.educationalwork.movies.R
 import ru.educationalwork.movies.activities.MainActivity
 import ru.educationalwork.movies.activities.MainActivity.Companion.MOVIES_LIST_FRAGMENT_BN_POSITION
 import ru.educationalwork.movies.activities.MainActivity.Companion.OUR_REQUEST_CODE
@@ -143,7 +143,9 @@ class MoviesListFragment : BaseFragment() {
 
         // Разделитель
         val itemDecoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
-        ContextCompat.getDrawable(requireActivity(), R.drawable.item_decorator_image)
+        ContextCompat.getDrawable(requireActivity(),
+            R.drawable.item_decorator_image
+        )
             ?.let { itemDecoration.setDrawable(it) }
         recyclerView.addItemDecoration(itemDecoration)
     }

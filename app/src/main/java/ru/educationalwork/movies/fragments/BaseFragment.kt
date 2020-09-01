@@ -1,17 +1,16 @@
-package ru.educationalwork.movies
+package ru.educationalwork.movies.fragments
 
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.details_fragment.*
-import kotlinx.android.synthetic.main.fragment_favorite_list.*
 import kotlinx.android.synthetic.main.fragment_movies_list.toolbar
+import ru.educationalwork.movies.R
 
 open class BaseFragment: Fragment() {
 
@@ -52,19 +51,33 @@ open class BaseFragment: Fragment() {
 
         when (theme) {
             SettingsFragment.DARK_THEME -> {
-                toolbar?.menu?.getItem(0)?.icon?.setTint(ContextCompat.getColor(requireActivity(), R.color.colorWhite))
+                toolbar?.menu?.getItem(0)?.icon?.setTint(ContextCompat.getColor(requireActivity(),
+                    R.color.colorWhite
+                ))
                 toolbar?.setBackgroundColor(resources.getColor(R.color.darkBackground, null))
-                descriptionCardView?.setCardBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.darkBackground))
-                collapsingToolbar?.setContentScrimColor(ContextCompat.getColor(requireActivity(), R.color.darkBackground))
-                app_bar_layout?.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.darkBackground))
+                descriptionCardView?.setCardBackgroundColor(ContextCompat.getColor(requireActivity(),
+                    R.color.darkBackground
+                ))
+                collapsingToolbar?.setContentScrimColor(ContextCompat.getColor(requireActivity(),
+                    R.color.darkBackground
+                ))
+                app_bar_layout?.setBackgroundColor(ContextCompat.getColor(requireActivity(),
+                    R.color.darkBackground
+                ))
             }
             SettingsFragment.LIGHT_THEME -> {
-                toolbar?.menu?.getItem(0)?.icon?.setTint(ContextCompat.getColor(requireActivity(), R.color.colorTextBody))
+                toolbar?.menu?.getItem(0)?.icon?.setTint(ContextCompat.getColor(requireActivity(),
+                    R.color.colorTextBody
+                ))
                 toolbar?.setTitleTextColor(Color.BLACK)
                 toolbar?.setBackgroundColor(resources.getColor(R.color.lightBackground, null))
                 toolbar?.setBackgroundColor(resources.getColor(R.color.lightBackground, null))
-                app_bar_layout?.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.lightBackground))
-                collapsingToolbar?.setContentScrimColor(ContextCompat.getColor(requireActivity(), R.color.lightBackground))
+                app_bar_layout?.setBackgroundColor(ContextCompat.getColor(requireActivity(),
+                    R.color.lightBackground
+                ))
+                collapsingToolbar?.setContentScrimColor(ContextCompat.getColor(requireActivity(),
+                    R.color.lightBackground
+                ))
 
                 collapsingToolbar?.setCollapsedTitleTextColor(Color.BLACK)
                 collapsingToolbar?.elevation = 4.0f

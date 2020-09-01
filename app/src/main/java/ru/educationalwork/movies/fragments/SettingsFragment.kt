@@ -1,4 +1,4 @@
-package ru.educationalwork.movies
+package ru.educationalwork.movies.fragments
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -8,11 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Spinner
-import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_settings.view.*
+import ru.educationalwork.movies.CustomLanguageAdapter
+import ru.educationalwork.movies.R
 import ru.educationalwork.movies.activities.MainActivity
-
 
 class SettingsFragment : BaseFragment() {
 
@@ -47,12 +47,21 @@ class SettingsFragment : BaseFragment() {
         val languageSpinner: Spinner = fragmentView.findViewById(R.id.langSpinner)
 
         // зададим данные
-        val spinnerData = arrayOf(resources.getString(R.string.lang_russian), resources.getString(R.string.lang_english))
+        val spinnerData = arrayOf(resources.getString(R.string.lang_russian), resources.getString(
+            R.string.lang_english
+        ))
 
-        val images = intArrayOf(R.drawable.flag_rus, R.drawable.flag_en)
+        val images = intArrayOf(
+            R.drawable.flag_rus,
+            R.drawable.flag_en
+        )
 
         // установим адаптер
-        val languageAdapter = CustomLanguageAdapter(requireContext(), images, spinnerData)
+        val languageAdapter = CustomLanguageAdapter(
+            requireContext(),
+            images,
+            spinnerData
+        )
         languageSpinner.adapter = languageAdapter
 
         // обработаем нажатие на элемент - выбор локализации
@@ -99,8 +108,14 @@ class SettingsFragment : BaseFragment() {
                 .getSharedPreferences(MY_SHARED_PREF_NAME, Context.MODE_PRIVATE)
                 .edit()
 
-            if (onSwitch) mySpinnersEditor.putInt(SAVE_THEME, DARK_THEME)
-            else mySpinnersEditor.putInt(SAVE_THEME, LIGHT_THEME)
+            if (onSwitch) mySpinnersEditor.putInt(
+                SAVE_THEME,
+                DARK_THEME
+            )
+            else mySpinnersEditor.putInt(
+                SAVE_THEME,
+                LIGHT_THEME
+            )
 
             mySpinnersEditor.putBoolean(SWITCH_THEME_POSITION, onSwitch)
             mySpinnersEditor.apply()
@@ -116,7 +131,7 @@ class SettingsFragment : BaseFragment() {
     private fun loadPositions(view: View) {
         val switchPosition: Boolean = requireActivity()
             .getSharedPreferences(MY_SHARED_PREF_NAME, Context.MODE_PRIVATE)
-            .getBoolean( SWITCH_THEME_POSITION, false)
+            .getBoolean(SWITCH_THEME_POSITION, false)
 
         view.switchTheme.isChecked = switchPosition
 

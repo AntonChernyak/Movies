@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.educationalwork.movies.R
-import ru.educationalwork.movies.SettingsFragment
+import ru.educationalwork.movies.fragments.SettingsFragment
 
 class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val poster: ImageView = itemView.findViewById(R.id.itemPosterView)

@@ -1,4 +1,4 @@
-package ru.educationalwork.movies
+package ru.educationalwork.movies.fragments
 
 import android.app.Activity
 import android.content.Intent
@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.educationalwork.movies.R
 import ru.educationalwork.movies.activities.MainActivity
 import ru.educationalwork.movies.all_movies_recycler.CustomItemAnimator
 import ru.educationalwork.movies.all_movies_recycler.MovieItem
@@ -70,7 +71,9 @@ class FavoriteListFragment : BaseFragment() {
 
         // Разделитель
         val itemDecoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
-        ContextCompat.getDrawable(requireActivity(), R.drawable.item_decorator_image)?.let { itemDecoration.setDrawable(it) }
+        ContextCompat.getDrawable(requireActivity(),
+            R.drawable.item_decorator_image
+        )?.let { itemDecoration.setDrawable(it) }
         favoriteRecyclerView.addItemDecoration(itemDecoration)
 
         // Аниматор

@@ -9,7 +9,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import ru.educationalwork.movies.R
-import ru.educationalwork.movies.SettingsFragment
+import ru.educationalwork.movies.fragments.SettingsFragment
 import java.util.*
 
 @SuppressLint("Registered")

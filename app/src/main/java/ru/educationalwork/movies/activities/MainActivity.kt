@@ -2,13 +2,15 @@ package ru.educationalwork.movies.activities
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.educationalwork.movies.*
 import ru.educationalwork.movies.all_movies_recycler.MovieItem
-
+import ru.educationalwork.movies.fragments.DetailsFragment
+import ru.educationalwork.movies.fragments.FavoriteListFragment
+import ru.educationalwork.movies.fragments.MoviesListFragment
+import ru.educationalwork.movies.fragments.SettingsFragment
 
 class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListener {
 
@@ -30,7 +32,6 @@ class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListe
         val favoriteList: MutableList<MovieItem> = mutableListOf()
         var items = arrayListOf<MovieItem>()
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,23 +74,15 @@ class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListe
     // переопределим кнопку "Назад"
     override fun onBackPressed() {
         val homeFragment = supportFragmentManager.findFragmentByTag(MOVIES_LIST_FRAGMENT_TAG)
-        val favoriteFragment = supportFragmentManager.findFragmentByTag(FAVORITE_LIST_FRAGMENT_TAG)
-        val settingsFragment = supportFragmentManager.findFragmentByTag(SETTINGS_FRAGMENT_TAG)
-        //for (f in supportFragmentManager.fragments) f.isDetached
-        if (favoriteFragment != null && favoriteFragment.isVisible) favoriteFragment.onDetach()
-        if (settingsFragment != null && settingsFragment.isVisible) settingsFragment.isRemoving
 
-        Log.d("BLA", "${settingsFragment?.isVisible}")
-
-        if (homeFragment != null && !homeFragment.isDetached) {
-            Log.d("BLA", "if = ${supportFragmentManager.backStackEntryCount}")
-            if (supportFragmentManager.backStackEntryCount == 0) CustomDialog(this).show()
-          else super.onBackPressed()
-            //  else supportFragmentManager.popBackStack()
-        } else {
-            Log.d("BLA", "else = ${supportFragmentManager.backStackEntryCount}")
-           // if (supportFragmentManager.backStackEntryCount > 0) supportFragmentManager.popBackStack()
-            if (supportFragmentManager.backStackEntryCount > 0) super.onBackPressed()
+        if (homeFragment != null && homeFragment.isVisible) CustomDialog(this).show()
+        else {
+            if (supportFragmentManager.backStackEntryCount > 0) {
+                when(bottomNavigationView.selectedItemId){
+                    R.id.itemHomeFragment -> bottomNavigationView.selectedItemId = R.id.itemHomeFragment
+                    R.id.itemFavoriteFragment -> bottomNavigationView.selectedItemId = R.id.itemFavoriteFragment
+                }
+            }
             else bottomNavigationView.selectedItemId = R.id.itemHomeFragment
         }
     }
@@ -101,8 +94,16 @@ class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListe
         poster: Int = 0,
         requestFragment: Fragment? = null
     ) {
+        if (supportFragmentManager.backStackEntryCount > 0) supportFragmentManager.popBackStack()
+
         val transaction = supportFragmentManager.beginTransaction()
         var fragment: Fragment? = supportFragmentManager.findFragmentByTag(tag)
+
+        val detachTransaction = supportFragmentManager.beginTransaction()
+        for (frag in supportFragmentManager.fragments) {
+            frag?.let { detachTransaction.detach(it) }
+        }
+        detachTransaction.commit()
 
         if (fragment == null) {
             fragment = when (tag) {
@@ -113,15 +114,13 @@ class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListe
                 else -> null
             }
             if (tag == DETAILS_FRAGMENT_TAG) fragment?.setTargetFragment(requestFragment, OUR_REQUEST_CODE)
-            fragment?.let { transaction.replace(R.id.fragmentContainer, it, tag) }
+            fragment?.let { transaction.add(R.id.fragmentContainer, it, tag) }
             if (fragment?.tag == DETAILS_FRAGMENT_TAG) transaction.addToBackStack(null)
-
         } else {
-            transaction.replace(R.id.fragmentContainer, fragment, tag)
+            transaction.attach(fragment)
         }
-        transaction.commit()
+        transaction.commitAllowingStateLoss()
     }
-
 
     override fun onDetailBtnClick(movie: MovieItem, requestFragment: Fragment?) {
         movie.isClick = true
