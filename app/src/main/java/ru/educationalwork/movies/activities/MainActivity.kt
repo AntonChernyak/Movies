@@ -1,223 +1,131 @@
 package ru.educationalwork.movies.activities
 
-import android.app.Activity
-import android.app.Dialog
-import android.content.Intent
-import android.content.res.Configuration
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-import ru.educationalwork.movies.CustomDialog
-import ru.educationalwork.movies.R
-import ru.educationalwork.movies.activities.MainActivity.Storage.favoriteList
-import ru.educationalwork.movies.activities.MainActivity.Storage.updateList
+import ru.educationalwork.movies.*
 import ru.educationalwork.movies.all_movies_recycler.MovieItem
-import ru.educationalwork.movies.all_movies_recycler.MoviesAdapter
+import ru.educationalwork.movies.fragments.DetailsFragment
+import ru.educationalwork.movies.fragments.FavoriteListFragment
+import ru.educationalwork.movies.fragments.MoviesListFragment
+import ru.educationalwork.movies.fragments.SettingsFragment
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListener {
 
     companion object {
-        val TAG = MainActivity::class.java.simpleName
-        const val IMAGE_INTENT_KEY = "image_intent_key"
-        const val TITLE_INTENT_KEY = "title_intent_key"
-        const val DESCRIPTION_INTENT_KEY = "description_intent_key"
+        const val RESULT_TAG = "result_tag"
         const val OUR_REQUEST_CODE = 42
         const val CHECKBOX_STATUS = "checkbox_status"
         const val COMMENT_TEXT = "comment_text"
+        const val MOVIES_LIST_FRAGMENT_TAG = "home_fragment_tag"
+        const val FAVORITE_LIST_FRAGMENT_TAG = "favorite_fragment_tag"
+        const val SETTINGS_FRAGMENT_TAG = "settings_fragment_tag"
+        const val DETAILS_FRAGMENT_TAG = "details_fragment_tag"
+        const val MOVIES_LIST_FRAGMENT_BN_POSITION = 0
+        const val FAVORITE_LIST_FRAGMENT_BN_POSITION = 1
+        const val SETTINGS_FRAGMENT_BN_POSITION = 2
     }
 
     object Storage {
         val favoriteList: MutableList<MovieItem> = mutableListOf()
-        val updateList: MutableList<Int> = mutableListOf()
+        var items = arrayListOf<MovieItem>()
     }
-
-    private var items = arrayListOf<MovieItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loadLocate()
         onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_main)
+        bottomNavigationViewSettings()
 
-        if (savedInstanceState == null) {
-            items = arrayListOf(
-                MovieItem(
-                    resources.getString(R.string.lotr_title),
-                    resources.getString(R.string.lotr_description),
-                    R.drawable.lotr
-                ),
-                MovieItem(
-                    resources.getString(R.string.pcs_title),
-                    resources.getString(R.string.pcs_description),
-                    R.drawable.pcs
-                ),
-                MovieItem(
-                    resources.getString(R.string.eurotrip_title),
-                    resources.getString(R.string.eurotrip_description),
-                    R.drawable.euro_trip
-                )
+        if (savedInstanceState == null) bottomNavigationView.selectedItemId = R.id.itemHomeFragment
+    }
+
+    private fun bottomNavigationViewSettings() {
+
+        val navListener: BottomNavigationView.OnNavigationItemSelectedListener =
+            BottomNavigationView.OnNavigationItemSelectedListener { item ->
+                when (item.itemId) {
+                    R.id.itemHomeFragment -> setFragment(MOVIES_LIST_FRAGMENT_TAG)
+                    R.id.itemFavoriteFragment -> setFragment(FAVORITE_LIST_FRAGMENT_TAG)
+                    R.id.itemSettingsFragment -> setFragment(SETTINGS_FRAGMENT_TAG)
+                }
+                true
+            }
+
+        val bnView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bnView.setOnNavigationItemSelectedListener(navListener)
+
+        // установим цвет заднего фона в зависимости от темы
+        val theme: Int = getSharedPreferences(SettingsFragment.MY_SHARED_PREF_NAME, Context.MODE_PRIVATE)
+                .getInt(SettingsFragment.SAVE_THEME, 0)
+
+        when (theme) {
+            SettingsFragment.DARK_THEME -> bottomNavigationView.setBackgroundColor(
+                resources.getColor(R.color.darkBackground, null)
             )
-        } else savedInstanceState.getParcelableArrayList<MovieItem>("List")?.let { items.addAll(it) }
-            initRecycler()
-    }
-
-    private fun initRecycler() {
-
-        val layoutManager =
-            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-            } else GridLayoutManager(this, 2)
-
-        val recyclerView = findViewById<RecyclerView>(R.id.moviesRecycler)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = MoviesAdapter(items, object : MoviesAdapter.MovieItemListener {
-            override fun onMoreButtonClick(movieItem: MovieItem, position: Int) {
-                movieItem.isClick = true
-                recyclerView.adapter?.notifyItemChanged(position)
-                val intent = Intent(this@MainActivity, FilmDescriptionActivity::class.java)
-                intent.putExtra(TITLE_INTENT_KEY, movieItem.title)
-                intent.putExtra(DESCRIPTION_INTENT_KEY, movieItem.description)
-                intent.putExtra(IMAGE_INTENT_KEY, movieItem.poster)
-                startActivityForResult(
-                    intent,
-                    OUR_REQUEST_CODE
-                )
-            }
-
-            override fun onFavoriteButtonClick(movieItem: MovieItem, position: Int) {
-                if (!movieItem.isFavorite) {
-                    movieItem.originalPosition = position
-                    movieItem.isFavorite = true
-                    favoriteList.add(movieItem)
-                    recyclerView.adapter?.notifyItemChanged(position)
-                } else {
-                    favoriteList.remove(movieItem)
-                    movieItem.isFavorite = false
-                    recyclerView.adapter?.notifyItemChanged(position)
-                }
-            }
-
-        })
-
-        // Пагинация
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (layoutManager.findLastVisibleItemPosition() == items.size - 1) {
-                    repeat(3) {
-                        items.add(
-                            MovieItem(
-                                resources.getString(R.string.lotr_title),
-                                resources.getString(R.string.lotr_description),
-                                R.drawable.lotr
-                            )
-                        )
-                        items.add(
-                            MovieItem(
-                                resources.getString(R.string.pcs_title),
-                                resources.getString(R.string.pcs_description),
-                                R.drawable.pcs
-                            )
-                        )
-                        items.add(
-                            MovieItem(
-                                resources.getString(R.string.eurotrip_title),
-                                resources.getString(R.string.eurotrip_description),
-                                R.drawable.euro_trip
-                            )
-                        )
-                    }
-                    recyclerView.adapter?.notifyItemRangeInserted(items.size - 3, 3)
-                }
-            }
-        })
-
-        // Чтобы отобразились касания на сердечко до скролла списка
-        recyclerView.smoothScrollToPosition(0)
-
-        // Разделитель
-        val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        getDrawable(R.drawable.item_decorator_image)?.let { itemDecoration.setDrawable(it) }
-        recyclerView.addItemDecoration(itemDecoration)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList("List", items)
+            SettingsFragment.LIGHT_THEME -> bottomNavigationView.setBackgroundColor(
+                resources.getColor(R.color.lightBackground, null)
+            )
+        }
     }
 
     // переопределим кнопку "Назад"
     override fun onBackPressed() {
-        val dialog: Dialog = CustomDialog(this)
-        dialog.show()
-    }
+        val homeFragment = supportFragmentManager.findFragmentByTag(MOVIES_LIST_FRAGMENT_TAG)
 
-    override fun onResume() {
-        super.onResume()
-        if (updateList.isNotEmpty()) {
-            for (i in updateList) {
-                moviesRecycler?.adapter?.notifyItemChanged(i)
-            }
-            updateList.clear()
-        }
-    }
-
-    // Получим результат из активити с описанием фильма
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == OUR_REQUEST_CODE) {
-            var checkBoxStatus: Boolean? = false
-            var commentText: String? = null
-            if (resultCode == Activity.RESULT_OK) {
-                data?.let {
-                    commentText = it.getStringExtra(COMMENT_TEXT)
-                    checkBoxStatus = it.getBooleanExtra(CHECKBOX_STATUS, false)
+        if (homeFragment != null && homeFragment.isVisible) CustomDialog(this).show()
+        else {
+            if (supportFragmentManager.backStackEntryCount > 0) {
+                when(bottomNavigationView.selectedItemId){
+                    R.id.itemHomeFragment -> bottomNavigationView.selectedItemId = R.id.itemHomeFragment
+                    R.id.itemFavoriteFragment -> bottomNavigationView.selectedItemId = R.id.itemFavoriteFragment
                 }
             }
-            Log.i(TAG, "Статус чекбокса: $checkBoxStatus, текст комментария: $commentText")
+            else bottomNavigationView.selectedItemId = R.id.itemHomeFragment
         }
     }
 
-    // обработка кнопки отправки сообщения (неявный интент)
-    fun inviteFriendOnClick() {
-        val textMessage = resources.getString(R.string.look)
-        val sendIntent = Intent()
-        sendIntent.action = Intent.ACTION_SEND
-        sendIntent.putExtra(Intent.EXTRA_TEXT, textMessage)
-        sendIntent.type = "text/plain"
-        val title = resources.getString(R.string.chooser)
-        // Создаем Intent для отображения диалога выбора.
-        val chooser = Intent.createChooser(sendIntent, title)
-        // Проверяем, что intent может быть успешно обработан
-        sendIntent.resolveActivity(packageManager)?.let {
-            startActivity(chooser)
+    private fun setFragment(
+        tag: String,
+        title: Int = 0,
+        description: Int = 0,
+        poster: Int = 0,
+        requestFragment: Fragment? = null
+    ) {
+        if (supportFragmentManager.backStackEntryCount > 0) supportFragmentManager.popBackStack()
+
+        val transaction = supportFragmentManager.beginTransaction()
+        var fragment: Fragment? = supportFragmentManager.findFragmentByTag(tag)
+
+        val detachTransaction = supportFragmentManager.beginTransaction()
+        for (frag in supportFragmentManager.fragments) {
+            frag?.let { detachTransaction.detach(it) }
         }
-    }
+        detachTransaction.commit()
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> {
-                val intent = Intent(this@MainActivity, SettingsActivity::class.java)
-                startActivity(intent)
-                return true
+        if (fragment == null) {
+            fragment = when (tag) {
+                MOVIES_LIST_FRAGMENT_TAG -> MoviesListFragment()
+                FAVORITE_LIST_FRAGMENT_TAG -> FavoriteListFragment()
+                SETTINGS_FRAGMENT_TAG -> SettingsFragment()
+                DETAILS_FRAGMENT_TAG -> DetailsFragment.newInstance(title, description, poster)
+                else -> null
             }
-            R.id.action_favorite -> {
-                val intent = Intent(this@MainActivity, FavoriteActivity::class.java)
-                startActivity(intent)
-                return true
-            }
-            else -> super.onOptionsItemSelected(item)
+            if (tag == DETAILS_FRAGMENT_TAG) fragment?.setTargetFragment(requestFragment, OUR_REQUEST_CODE)
+            fragment?.let { transaction.add(R.id.fragmentContainer, it, tag) }
+            if (fragment?.tag == DETAILS_FRAGMENT_TAG) transaction.addToBackStack(null)
+        } else {
+            transaction.attach(fragment)
         }
+        transaction.commitAllowingStateLoss()
+    }
+
+    override fun onDetailBtnClick(movie: MovieItem, requestFragment: Fragment?) {
+        movie.isClick = true
+        // requestFragment нужен, чтобы получить статус чекбокса и текст комментария из DetailFragment
+        setFragment(DETAILS_FRAGMENT_TAG, movie.title, movie.description, movie.poster, requestFragment)
     }
 
 }

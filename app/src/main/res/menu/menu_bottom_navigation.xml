@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/itemHomeFragment"
+        android:icon="@drawable/ic_baseline_home_24"
+        android:title="@string/bn_item_home" />
+    <item
+        android:id="@+id/itemFavoriteFragment"
+        android:icon="@drawable/ic_baseline_favorite_24"
+        android:title="@string/bn_item_favorite" />
+    <item
+        android:id="@+id/itemSettingsFragment"
+        android:icon="@drawable/ic_settings_white_24dp"
+        android:title="@string/bn_item_settings" />
+</menu>
