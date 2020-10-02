@@ -1,4 +1,4 @@
-package ru.educationalwork.movies.all_movies_recycler
+package ru.educationalwork.movies.presentation.view.all_movies_recycler
 
 import android.content.Context
 import android.graphics.Color
@@ -6,8 +6,11 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import ru.educationalwork.movies.R
-import ru.educationalwork.movies.fragments.SettingsFragment
+import ru.educationalwork.movies.presentation.view.fragments.SettingsFragment
+import ru.educationalwork.movies.repository.server.MovieItem
 
 class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val poster: ImageView = itemView.findViewById(R.id.itemPosterView)
@@ -15,8 +18,20 @@ class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val favoriteBtn : ImageView = itemView.findViewById(R.id.itemLikeImageView)
 
     fun bind(item: MovieItem) {
-        title.text = itemView.resources.getString(item.title)
-        poster.setImageResource(item.poster)
+     //   title.text = itemView.resources.getString(item.title)
+      //  poster.setImageResource(item.posterPath)
+        title.text = item.title
+
+        Glide.with(poster.context)
+            .load(item.posterPath)
+            .placeholder(R.drawable.ic_placeholder)
+            .error(R.drawable.ic_error)
+            .centerCrop()
+            //.override(itemView.resources.getDimensionPixelSize(R.dimen.movie_list_poster_height))
+           // .thumbnail(0.5f)
+           /* .diskCacheStrategy(DiskCacheStrategy.NONE)  // Чтобы одинаковые ссылки подгружались (для пагинации), но это убирает кеширование
+            .skipMemoryCache(true) // Это тоже*/
+            .into(poster)
 
         if (item.isClick) title.setTextColor(Color.MAGENTA)
         else title.setTextColor(getTitleColor(title.context))

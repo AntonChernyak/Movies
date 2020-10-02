@@ -1,4 +1,4 @@
-package ru.educationalwork.movies
+package ru.educationalwork.movies.presentation.view
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import ru.educationalwork.movies.R
 
 class CustomLanguageAdapter(
     applicationContext: Context?,

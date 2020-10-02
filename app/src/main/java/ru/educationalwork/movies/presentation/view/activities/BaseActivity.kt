@@ -1,4 +1,4 @@
-package ru.educationalwork.movies.activities
+package ru.educationalwork.movies.presentation.view.activities
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
@@ -9,7 +9,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import ru.educationalwork.movies.R
-import ru.educationalwork.movies.fragments.SettingsFragment
+import ru.educationalwork.movies.presentation.view.fragments.SettingsFragment
 import java.util.*
 
 @SuppressLint("Registered")

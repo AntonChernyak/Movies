@@ -4,4 +4,6 @@
     <dimen name="elevationToolbar">4dp</dimen>
     <dimen name="sheet_text_scrim_height_top">88dp</dimen>
     <dimen name="sheet_text_scrim_height_bottom">120dp</dimen>
+    <dimen name="movie_list_poster_height">150dp</dimen>
+    <dimen name="detailed_fragment__poster_height">350dp</dimen>
 </resources>

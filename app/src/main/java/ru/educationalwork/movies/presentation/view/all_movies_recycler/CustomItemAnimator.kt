@@ -1,4 +1,4 @@
-package ru.educationalwork.movies.all_movies_recycler
+package ru.educationalwork.movies.presentation.view.all_movies_recycler
 
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DefaultItemAnimator

@@ -1,27 +1,7 @@
-package ru.educationalwork.movies.fragments
-
-import android.app.Activity
-import android.content.Intent
-import android.content.res.Configuration
-import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
-import ru.educationalwork.movies.R
-import ru.educationalwork.movies.activities.MainActivity
-import ru.educationalwork.movies.all_movies_recycler.CustomItemAnimator
-import ru.educationalwork.movies.all_movies_recycler.MovieItem
-import ru.educationalwork.movies.all_movies_recycler.MoviesAdapter
+package ru.educationalwork.movies.presentation.view.fragments
 
 class FavoriteListFragment : BaseFragment() {
+/*
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -96,6 +76,7 @@ class FavoriteListFragment : BaseFragment() {
             Log.i(MainActivity.RESULT_TAG, "Статус чекбокса: $checkBoxStatus, текст комментария: $commentText")
         }
     }
+*/
 
 
 }

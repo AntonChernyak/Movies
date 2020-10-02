@@ -1,10 +1,11 @@
-package ru.educationalwork.movies
+package ru.educationalwork.movies.presentation.view
 
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.widget.Button
+import ru.educationalwork.movies.R
 
 
 class CustomDialog(context: Context) : Dialog(context) {

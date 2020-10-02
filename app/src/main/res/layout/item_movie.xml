@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/itemPosterView"
         android:layout_width="0dp"
-        android:layout_height="150dp"
+        android:layout_height="@dimen/movie_list_poster_height"
         android:contentDescription="@string/poster_image"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"

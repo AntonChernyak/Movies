@@ -1,4 +1,4 @@
-package ru.educationalwork.movies.fragments
+package ru.educationalwork.movies.presentation.view.fragments
 
 import android.content.Context
 import android.content.Intent

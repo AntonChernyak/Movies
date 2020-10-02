@@ -1,4 +1,4 @@
-package ru.educationalwork.movies.fragments
+package ru.educationalwork.movies.presentation.view.fragments
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -10,9 +10,9 @@ import android.widget.AdapterView
 import android.widget.Spinner
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_settings.view.*
-import ru.educationalwork.movies.CustomLanguageAdapter
+import ru.educationalwork.movies.presentation.view.CustomLanguageAdapter
 import ru.educationalwork.movies.R
-import ru.educationalwork.movies.activities.MainActivity
+import ru.educationalwork.movies.presentation.view.activities.MainActivity
 
 class SettingsFragment : BaseFragment() {
 
@@ -57,11 +57,12 @@ class SettingsFragment : BaseFragment() {
         )
 
         // установим адаптер
-        val languageAdapter = CustomLanguageAdapter(
-            requireContext(),
-            images,
-            spinnerData
-        )
+        val languageAdapter =
+            CustomLanguageAdapter(
+                requireContext(),
+                images,
+                spinnerData
+            )
         languageSpinner.adapter = languageAdapter
 
         // обработаем нажатие на элемент - выбор локализации

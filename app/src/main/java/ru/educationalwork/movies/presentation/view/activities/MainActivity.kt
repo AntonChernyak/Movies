@@ -1,4 +1,4 @@
-package ru.educationalwork.movies.activities
+package ru.educationalwork.movies.presentation.view.activities
 
 import android.content.Context
 import android.os.Bundle
@@ -6,11 +6,13 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.educationalwork.movies.*
-import ru.educationalwork.movies.all_movies_recycler.MovieItem
-import ru.educationalwork.movies.fragments.DetailsFragment
-import ru.educationalwork.movies.fragments.FavoriteListFragment
-import ru.educationalwork.movies.fragments.MoviesListFragment
-import ru.educationalwork.movies.fragments.SettingsFragment
+import ru.educationalwork.movies.repository.model.MovieModel
+import ru.educationalwork.movies.presentation.view.CustomDialog
+import ru.educationalwork.movies.presentation.view.fragments.DetailsFragment
+import ru.educationalwork.movies.presentation.view.fragments.FavoriteListFragment
+import ru.educationalwork.movies.presentation.view.fragments.MoviesListFragment
+import ru.educationalwork.movies.presentation.view.fragments.SettingsFragment
+import ru.educationalwork.movies.repository.server.MovieItem
 
 class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListener {
 
@@ -26,11 +28,6 @@ class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListe
         const val MOVIES_LIST_FRAGMENT_BN_POSITION = 0
         const val FAVORITE_LIST_FRAGMENT_BN_POSITION = 1
         const val SETTINGS_FRAGMENT_BN_POSITION = 2
-    }
-
-    object Storage {
-        val favoriteList: MutableList<MovieItem> = mutableListOf()
-        var items = arrayListOf<MovieItem>()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +72,9 @@ class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListe
     override fun onBackPressed() {
         val homeFragment = supportFragmentManager.findFragmentByTag(MOVIES_LIST_FRAGMENT_TAG)
 
-        if (homeFragment != null && homeFragment.isVisible) CustomDialog(this).show()
+        if (homeFragment != null && homeFragment.isVisible) CustomDialog(
+            this
+        ).show()
         else {
             if (supportFragmentManager.backStackEntryCount > 0) {
                 when(bottomNavigationView.selectedItemId){
@@ -89,9 +88,9 @@ class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListe
 
     private fun setFragment(
         tag: String,
-        title: Int = 0,
-        description: Int = 0,
-        poster: Int = 0,
+        title: String = "",
+        description: String = "",
+        poster: String = "",
         requestFragment: Fragment? = null
     ) {
         if (supportFragmentManager.backStackEntryCount > 0) supportFragmentManager.popBackStack()
@@ -125,7 +124,7 @@ class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListe
     override fun onDetailBtnClick(movie: MovieItem, requestFragment: Fragment?) {
         movie.isClick = true
         // requestFragment нужен, чтобы получить статус чекбокса и текст комментария из DetailFragment
-        setFragment(DETAILS_FRAGMENT_TAG, movie.title, movie.description, movie.poster, requestFragment)
+        setFragment(DETAILS_FRAGMENT_TAG, movie.title, movie.description, movie.posterPath, requestFragment)
     }
 
 }

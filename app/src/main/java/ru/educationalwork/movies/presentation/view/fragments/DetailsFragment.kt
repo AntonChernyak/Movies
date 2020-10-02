@@ -1,4 +1,4 @@
-package ru.educationalwork.movies.fragments
+package ru.educationalwork.movies.presentation.view.fragments
 
 import android.app.Activity
 import android.content.Intent
@@ -8,9 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.details_fragment.*
 import ru.educationalwork.movies.R
-import ru.educationalwork.movies.activities.MainActivity
+import ru.educationalwork.movies.presentation.view.activities.MainActivity
 
 class DetailsFragment : BaseFragment(){
 
@@ -19,13 +20,12 @@ class DetailsFragment : BaseFragment(){
         private const val EXTRA_DESCRIPTION = "extra_description"
         private const val EXTRA_POSTER = "extra_poster"
 
-        fun newInstance(title: Int, description: Int, poster: Int): DetailsFragment {
-            val moviesListFragment =
-                DetailsFragment()
+        fun newInstance(title: String, description: String, poster: String): DetailsFragment {
+            val moviesListFragment = DetailsFragment()
             val bundle = Bundle()
-            bundle.putInt(EXTRA_TITLE, title)
-            bundle.putInt(EXTRA_DESCRIPTION, description)
-            bundle.putInt(EXTRA_POSTER, poster)
+            bundle.putString(EXTRA_TITLE, title)
+            bundle.putString(EXTRA_DESCRIPTION, description)
+            bundle.putString(EXTRA_POSTER, poster)
             moviesListFragment.arguments = bundle
 
             return moviesListFragment
@@ -42,13 +42,19 @@ class DetailsFragment : BaseFragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val title: Int? = arguments?.getInt(EXTRA_TITLE, 0)
-        movieTitleTextView.text = title?.let { view.resources.getString(it) }
+        val title: String? = arguments?.getString(EXTRA_TITLE, "")
+        movieTitleTextView.text = title
 
-        val description: Int? = arguments?.getInt(EXTRA_DESCRIPTION, 0)
-        movieDescriptionTextView.text = description?.let { view.resources.getString(it) }
+        val description: String? = arguments?.getString(EXTRA_DESCRIPTION, "")
+        movieDescriptionTextView.text = description
 
-        arguments?.getInt(EXTRA_POSTER, 0)?.let { movieDescriptionImageView.setImageResource(it) }
+        val posterPath = arguments?.getString(EXTRA_POSTER, "")
+        Glide.with(this)
+            .load(posterPath)
+            .placeholder(R.drawable.ic_placeholder)
+            .error(R.drawable.ic_error)
+            .into(movieDescriptionImageView)
+        //arguments?.getInt(EXTRA_POSTER, 0)?.let { movieDescriptionImageView.setImageResource(it) }
 
         toolbarDescriptionFragment.title = resources.getString(R.string.movie_description)
     }
