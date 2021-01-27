@@ -1,36 +1,48 @@
 package ru.educationalwork.movies.presentation.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import ru.educationalwork.movies.repository.model.MovieModel
+import ru.educationalwork.movies.App
+import ru.educationalwork.movies.domain.MoviesListInteractor
+import ru.educationalwork.movies.repository.model.MovieItem
 
-class FavoriteListViewModel : ViewModel(){
-    private val moviesLiveData = MutableLiveData<List<MovieModel>>()
+class FavoriteListViewModel(application: Application) : AndroidViewModel(application){
+    private val favoriteMovieLiveData = MutableLiveData<MovieItem>()
+    private val favoriteMoviesListLiveData = MutableLiveData<List<MovieItem>>()
+    private val moviesInteractor = App.instance?.moviesInteractor
 
-    val movies: LiveData<List<MovieModel>>
-        get() = moviesLiveData
+    val favoriteMovie: LiveData<MovieItem>
+        get() = favoriteMovieLiveData
 
-    fun getRepos(){
+    val favoriteMovieList: LiveData<List<MovieItem>>
+        get() = favoriteMoviesListLiveData
 
+
+    fun addToFavorite(movieItem: MovieItem) {
+        moviesInteractor?.insertMovie(movieItem, getApplication())
     }
 
-    // Обработка клика на кнопку
-/*    fun onGetDataClick() {
-        githubInteractor.getRepos("octocat", object : GithubInteractor.GetRepoCallback {
-            override fun onSuccess(repos: List<Repo>) {
-                reposLiveData.postValue(repos)
+    fun deleteFromFavorite(movieItem: MovieItem) {
+        moviesInteractor?.deleteMovie(movieItem, getApplication())
+    }
+
+    fun getData() {
+        moviesInteractor?.getFavoritesMoviesList(getApplication(), object : MoviesListInteractor.GetMovieCallback{
+            override fun onSuccess(repos: List<MovieItem>) {
+                favoriteMoviesListLiveData.value = repos
             }
 
             override fun onError(error: String) {
-                errorLiveData.postValue(error)
+                TODO("Not yet implemented")
             }
+
         })
     }
 
-    fun onRepoSelect(repoUrl: String) {
-        selectedRepoUrlLiveData.postValue(repoUrl)
-    }*/
-
+    fun getFavoritesMoviesSize() : Int?{
+        return moviesInteractor?.getCount(context = getApplication())
+    }
 
 }

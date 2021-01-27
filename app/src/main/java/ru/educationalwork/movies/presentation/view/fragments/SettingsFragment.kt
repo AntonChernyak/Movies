@@ -26,6 +26,8 @@ class SettingsFragment : BaseFragment() {
         const val ENG = 1
         const val LIGHT_THEME = 100
         const val DARK_THEME = 101
+
+        var LOCALE = "ru"
     }
 
     private var localeValue: String? = null
@@ -80,6 +82,7 @@ class SettingsFragment : BaseFragment() {
 
                 // сохраним выбранную локаль и позицию
                 localeValue?.let { saveLocaleSettings(it, fragmentView) }
+                LOCALE = localeValue.toString()
 
                 // если позиция поменялась, то персоздадим активити
                 if (position != oldSpinnerPosition) requireActivity().recreate()

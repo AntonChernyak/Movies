@@ -16,22 +16,27 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_movies_list.*
 import ru.educationalwork.movies.R
 import ru.educationalwork.movies.presentation.view.activities.MainActivity
 import ru.educationalwork.movies.presentation.view.activities.MainActivity.Companion.MOVIES_LIST_FRAGMENT_BN_POSITION
 import ru.educationalwork.movies.presentation.view.activities.MainActivity.Companion.OUR_REQUEST_CODE
 import ru.educationalwork.movies.presentation.view.activities.MainActivity.Companion.RESULT_TAG
-import ru.educationalwork.movies.repository.model.MovieModel
 import ru.educationalwork.movies.presentation.view.all_movies_recycler.MoviesAdapter
+import ru.educationalwork.movies.presentation.viewmodel.FavoriteListViewModel
 import ru.educationalwork.movies.presentation.viewmodel.MovieListViewModel
-import ru.educationalwork.movies.repository.server.MovieItem
+import ru.educationalwork.movies.repository.model.MovieItem
 
 class MoviesListFragment : BaseFragment() {
 
     private var adapter: MoviesAdapter? = null
     private val moviesListViewModel: MovieListViewModel by lazy {
         ViewModelProvider(this@MoviesListFragment).get(MovieListViewModel::class.java)
+    }
+    private val favoriteListListViewModel: FavoriteListViewModel by lazy {
+        ViewModelProvider(this@MoviesListFragment).get(FavoriteListViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -46,18 +51,23 @@ class MoviesListFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initRecycler(view)
-         moviesListViewModel.getData()
+        moviesListViewModel.getData()
 
-            moviesListViewModel.moviesList.observe(this.viewLifecycleOwner, Observer {
-                Log.d("TAGGGGG", "FragmentObserver = ${adapter?.itemCount}")
-                if (adapter?.itemCount == 0) {
-                    adapter?.setItems(it)
-                    adapter?.notifyDataSetChanged()
-                }
-            })
+        moviesListViewModel.showProgress.observe(this.viewLifecycleOwner, Observer {isLoading ->
+            if (isLoading) loadingProgressBar.visibility = View.VISIBLE
+            else loadingProgressBar.visibility = View.GONE
+        })
+
+        moviesListViewModel.moviesList.observe(this.viewLifecycleOwner, Observer {
+            if (adapter?.itemCount == 0) {
+                adapter?.setItems(it)
+                adapter?.notifyDataSetChanged()
+            }
+        })
 
         requireActivity().bottomNavigationView.menu.getItem(MOVIES_LIST_FRAGMENT_BN_POSITION).isChecked = true
     }
+
 
     private fun initRecycler(view: View) {
 
@@ -75,32 +85,32 @@ class MoviesListFragment : BaseFragment() {
             }
 
             override fun onFavoriteButtonClick(movieItem: MovieItem, position: Int) {
-/*                if (!movieItem.isFavorite) {
-                    movieItem.isFavorite = true
-                    favoriteList.add(movieItem)
+                if (!movieItem.favoriteStatus) {
+                    movieItem.favoriteStatus = true
+                    favoriteListListViewModel.addToFavorite(movieItem)
                     recyclerView.adapter?.notifyItemChanged(position)
 
                     Snackbar
                         .make(view, resources.getString(R.string.added_to_favorites), Snackbar.LENGTH_SHORT)
                         .setAction(resources.getString(R.string.undo)) {
-                            favoriteList.remove(movieItem)
-                            movieItem.isFavorite = false
+                            favoriteListListViewModel.deleteFromFavorite(movieItem)
+                            movieItem.favoriteStatus = false
                             recyclerView.adapter?.notifyItemChanged(position)}
                         .show()
                 } else {
-                    favoriteList.remove(movieItem)
-                    movieItem.isFavorite = false
+                    favoriteListListViewModel.deleteFromFavorite(movieItem)
+                    movieItem.favoriteStatus = false
                     recyclerView.adapter?.notifyItemChanged(position)
 
                     Snackbar
                         .make(view, resources.getString(R.string.removed_from_favorites), Snackbar.LENGTH_SHORT)
                         .setAction(resources.getString(R.string.undo)) {
-                            movieItem.isFavorite = true
-                            favoriteList.add(movieItem)
+                            movieItem.favoriteStatus = true
+                            favoriteListListViewModel.addToFavorite(movieItem)
                             recyclerView.adapter?.notifyItemChanged(position)
                         }
                         .show()
-                }*/
+                }
             }
 
         })

@@ -7,10 +7,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import ru.educationalwork.movies.R
 import ru.educationalwork.movies.presentation.view.fragments.SettingsFragment
-import ru.educationalwork.movies.repository.server.MovieItem
+import ru.educationalwork.movies.repository.model.MovieItem
 
 class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val poster: ImageView = itemView.findViewById(R.id.itemPosterView)
@@ -33,10 +32,10 @@ class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
             .skipMemoryCache(true) // Это тоже*/
             .into(poster)
 
-        if (item.isClick) title.setTextColor(Color.MAGENTA)
+        if (item.onClickStatus) title.setTextColor(Color.MAGENTA)
         else title.setTextColor(getTitleColor(title.context))
 
-        if (item.isFavorite) favoriteBtn.setColorFilter(Color.RED)
+        if (item.favoriteStatus) favoriteBtn.setColorFilter(Color.RED)
         else favoriteBtn.setColorFilter(Color.GRAY)
     }
 

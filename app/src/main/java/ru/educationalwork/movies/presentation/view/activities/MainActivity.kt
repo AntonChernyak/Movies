@@ -6,13 +6,12 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.educationalwork.movies.*
-import ru.educationalwork.movies.repository.model.MovieModel
 import ru.educationalwork.movies.presentation.view.CustomDialog
 import ru.educationalwork.movies.presentation.view.fragments.DetailsFragment
 import ru.educationalwork.movies.presentation.view.fragments.FavoriteListFragment
 import ru.educationalwork.movies.presentation.view.fragments.MoviesListFragment
 import ru.educationalwork.movies.presentation.view.fragments.SettingsFragment
-import ru.educationalwork.movies.repository.server.MovieItem
+import ru.educationalwork.movies.repository.model.MovieItem
 
 class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListener {
 
@@ -122,9 +121,14 @@ class MainActivity : BaseActivity(), MoviesListFragment.OnDetailButtonClickListe
     }
 
     override fun onDetailBtnClick(movie: MovieItem, requestFragment: Fragment?) {
-        movie.isClick = true
+        movie.onClickStatus= true
         // requestFragment нужен, чтобы получить статус чекбокса и текст комментария из DetailFragment
-        setFragment(DETAILS_FRAGMENT_TAG, movie.title, movie.description, movie.posterPath, requestFragment)
+        setFragment(
+            DETAILS_FRAGMENT_TAG,
+            movie.title.toString(),
+            movie.overview.toString(),
+            movie.posterPath.toString(),
+            requestFragment)
     }
 
 }
